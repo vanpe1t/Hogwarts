@@ -1,9 +1,18 @@
-package ru.hogwarts.school.model;
+package ru.hogwarts.school.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 import java.util.Objects;
 
+@Entity
+@Table(name = "faculty")
 public class Faculty {
+    @Id
+    @GeneratedValue
     private Long id;
+
     private String name;
     private String color;
 
@@ -11,6 +20,10 @@ public class Faculty {
         this.id = id;
         this.name = name;
         this.color = color;
+    }
+
+    public Faculty() {
+
     }
 
     public Long getId() {
@@ -51,7 +64,7 @@ public class Faculty {
     }
 
     @Override
-    public String toString() {
+    public String   toString() {
         return "Faculty{" +
                 "id=" + id +
                 ", name='" + name + '\'' +

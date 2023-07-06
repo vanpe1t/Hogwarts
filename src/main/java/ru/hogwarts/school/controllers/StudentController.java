@@ -1,11 +1,12 @@
-package ru.hogwarts.school.controller;
+package ru.hogwarts.school.controllers;
 
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.service.StudentService;
+import ru.hogwarts.school.models.Student;
+import ru.hogwarts.school.services.StudentService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,9 +20,9 @@ public class StudentController {
         }
 
         @GetMapping("{id}")
-        public ResponseEntity<Student> GetStudent(@PathVariable Long id) {
+        public ResponseEntity<Student> getStudent(@PathVariable Long id) {
 
-            Student student = studentService.FindStudent(id);
+            Student student = studentService.findStudent(id);
 
             if (student == null) {
                 return ResponseEntity.notFound().build();
@@ -32,22 +33,23 @@ public class StudentController {
         }
 
         @GetMapping(path = "/list")
-        public ResponseEntity<Map<Long, Student>> GetStudentByAge(@RequestParam int age) {
+        public ResponseEntity<List<Student>> getStudentByAge(@RequestParam int age) {
             return ResponseEntity.ok(studentService.getStudentByAge(age));
         }
 
         @PostMapping
-        public Student CreateStudent(@RequestBody Student student) {
-            return studentService.CreateStudent(student);
+        public Student createStudent(@RequestBody Student student) {
+            return studentService.createStudent(student);
         }
 
         @DeleteMapping("{id}")
-        public Student DeleteStudent(@PathVariable Long id)  {
-            return studentService.deleteStudent(id);
+        public ResponseEntity deleteStudent(@PathVariable Long id)  {
+            studentService.deleteStudent(id);
+            return ResponseEntity.ok().build();
         }
 
         @PutMapping
-        public ResponseEntity<Student> EditStudent(@RequestBody Student student) {
+        public ResponseEntity<Student> editStudent(@RequestBody Student student) {
 
             Student editingStudent = studentService.editStudent(student);
 

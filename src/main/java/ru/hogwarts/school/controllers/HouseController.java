@@ -1,12 +1,11 @@
-package ru.hogwarts.school.controller;
+package ru.hogwarts.school.controllers;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.hogwarts.school.model.Faculty;
-import ru.hogwarts.school.model.Student;
-import ru.hogwarts.school.service.HouseService;
-import ru.hogwarts.school.service.StudentService;
+import ru.hogwarts.school.models.Faculty;
+import ru.hogwarts.school.services.HouseService;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -20,9 +19,9 @@ public class HouseController {
     }
 
     @GetMapping("{id}")
-    public ResponseEntity<Faculty> GetFaculty(@PathVariable Long id) {
+    public ResponseEntity<Faculty> getFaculty(@PathVariable Long id) {
 
-        Faculty faculty  = houseService.FindFaculty(id);
+        Faculty faculty  = houseService.findFaculty(id);
         if (faculty == null) {
             return ResponseEntity.notFound().build();
         }
@@ -31,17 +30,18 @@ public class HouseController {
     }
 
     @PostMapping
-    public Faculty CreateFaculty(@RequestBody Faculty faculty) {
-        return houseService.CreateFaculty(faculty);
+    public Faculty createFaculty(@RequestBody Faculty faculty) {
+        return houseService.createFaculty(faculty);
     }
 
     @DeleteMapping("{id}")
-    public Faculty DeleteFaculty(@PathVariable Long id)  {
-        return houseService.deleteFaculty(id);
+    public ResponseEntity deleteFaculty(@PathVariable Long id)  {
+        houseService.deleteFaculty(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    public ResponseEntity<Faculty> EditFaculty(@RequestBody Faculty faculty) {
+    public ResponseEntity<Faculty> editFaculty(@RequestBody Faculty faculty) {
 
         Faculty editFaculty = houseService.editFaculty(faculty);
         if (editFaculty == null) {
@@ -52,7 +52,7 @@ public class HouseController {
     }
 
     @GetMapping(path = "/list")
-    public ResponseEntity< Map<Long, Faculty>> GetFacultyByColor(@RequestParam String color) {
+    public ResponseEntity<List<Faculty>> getFacultyByColor(@RequestParam String color) {
         return ResponseEntity.ok(houseService.getFacultyByColor(color));
     }
 }
