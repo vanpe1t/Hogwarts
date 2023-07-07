@@ -1,6 +1,7 @@
 package ru.hogwarts.school.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import ru.hogwarts.school.dto.FacultyDTO;
 import ru.hogwarts.school.models.Faculty;
 
 import java.util.List;

@@ -1,9 +1,11 @@
 package ru.hogwarts.school.services;
 
 import org.springframework.stereotype.Service;
+import ru.hogwarts.school.dto.StudentDTO;
 import ru.hogwarts.school.models.Student;
 import ru.hogwarts.school.repositories.StudentRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -18,25 +20,17 @@ public class StudentService {
         this.studentRepository = studentRepository;
     }
 
-    public Student createStudent(Student student) {
-        return studentRepository.save(student);
-//        student.setId(++lastId);
-//        studentMap.put(lastId, student);
-//        return student;
+    public StudentDTO createStudent(Student student) {
+        return StudentDTO.fromStudent(studentRepository.save(student));
     }
 
     public Student findStudent(long id) {
         return studentRepository.findById(id).get();
-//        return studentMap.get(id);
     }
 
-    public Student editStudent(Student student) {
-        return studentRepository.save(student);
-//        if (studentMap.containsKey(student.getId())) {
-//            studentMap.put(student.getId(), student);
-//            return student;
-//        }
-//        return null;
+    public StudentDTO editStudent(Student student) {
+        return StudentDTO.fromStudent(studentRepository.save(student));
+
     }
 
     public void deleteStudent(long id) {
@@ -44,14 +38,23 @@ public class StudentService {
         studentRepository.deleteById(id);
     }
 
-    public List<Student> getStudentByAge(int age) {
+    public  List<StudentDTO> getStudentByAge(int age) {
 
-        return studentRepository.findStudentsByAge(age);
+        return returnDTOList(studentRepository.findStudentsByAge(age));
 
-//        return studentMap.entrySet()
-//                         .stream()
-//                         .filter(x -> x.getValue().getAge() == age)
-//                         .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
     }
+
+    public List<StudentDTO> getStudentByAgeBetween(int minAge, int maxAge) {
+        return  returnDTOList( studentRepository.findStudentsByAgeBetween(minAge, maxAge));
+    }
+
+    private List<StudentDTO> returnDTOList(List<Student> students) {
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        for (Student student: students) {
+            studentDTOS.add(StudentDTO.fromStudent(student));
+        }
+        return studentDTOS;
+    }
+
 
 }
