@@ -1,5 +1,7 @@
 package ru.hogwarts.school.services;
 
+import org.hibernate.loader.entity.NaturalIdEntityJoinWalker;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import ru.hogwarts.school.dto.StudentDTO;
 import ru.hogwarts.school.models.Student;
@@ -46,6 +48,23 @@ public class StudentService {
 
     public List<StudentDTO> getStudentByAgeBetween(int minAge, int maxAge) {
         return  returnDTOList( studentRepository.findStudentsByAgeBetween(minAge, maxAge));
+    }
+
+    public Integer  getQuantityOfStudent() {
+        return studentRepository.getQuantityOfStudent();
+    }
+
+    public Double getAverageAge() {
+        return studentRepository.getAverageAge();
+    }
+
+    public List<StudentDTO> getYoungestStudent() {
+        return returnDTOList(studentRepository.getYoungestStudent());
+    }
+
+    public List<StudentDTO> findAllStudent(Integer pageNumber, Integer pageSize) {
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, pageSize > 50 || pageSize <=0 ? 50 : pageSize);
+        return returnDTOList(studentRepository.findAll(pageRequest).getContent());
     }
 
     private List<StudentDTO> returnDTOList(List<Student> students) {

@@ -20,6 +20,12 @@ public class StudentController {
             this.studentService = studentService;
         }
 
+
+        @GetMapping(path = "/findallstudent")
+        public ResponseEntity<List<StudentDTO>> findAllStudent(@RequestParam("page") Integer page, @RequestParam("size") Integer size) {
+            return  ResponseEntity.ok(studentService.findAllStudent(page, size));
+        }
+
         @GetMapping("{id}")
         public ResponseEntity<Student> getStudent(@PathVariable Long id) {
 
@@ -40,6 +46,27 @@ public class StudentController {
             } else {
                 return ResponseEntity.ok(studentService.getStudentByAgeBetween(minAge, maxAge));
             }
+        }
+
+        @GetMapping(path = "/get_quantity_of_student")
+        public ResponseEntity<Integer> getQuantityOfStudent() {
+
+            return ResponseEntity.ok(studentService.getQuantityOfStudent());
+
+        }
+
+        @GetMapping(path = "/get_average_age")
+        public ResponseEntity<Double> getAverageAge() {
+
+            return ResponseEntity.ok(studentService.getAverageAge());
+
+        }
+
+        @GetMapping(path = "/get_youngest_student")
+        public ResponseEntity<List<StudentDTO>> getYoungestStudent() {
+
+            return ResponseEntity.ok(studentService.getYoungestStudent());
+
         }
 
         @PostMapping
