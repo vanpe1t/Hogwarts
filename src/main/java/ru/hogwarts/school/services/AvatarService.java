@@ -1,8 +1,11 @@
 package ru.hogwarts.school.services;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import ru.hogwarts.school.dto.StudentDTO;
 import ru.hogwarts.school.models.Avatar;
 import ru.hogwarts.school.models.Student;
 import ru.hogwarts.school.repositories.AvatarRepository;
@@ -22,7 +25,7 @@ public class AvatarService {
 
     @Value("${student.avatar.dir.path}")
     private String avatarPath;
-
+    private Logger logger = LoggerFactory.getLogger(StudentService.class);
     private AvatarRepository avatarRepository;
     private StudentService studentService;
     private StudentRepository studentRepository;
@@ -36,7 +39,8 @@ public class AvatarService {
 
     public void uploadAvatar(long id, MultipartFile fileAvatar) throws IOException {
 
-        Student student = studentService.findStudent(id);
+        logger.debug("Was invoked method upload avatar");
+        StudentDTO student = studentService.findStudent(id);
         Path filePath = Path.of(avatarPath, id + "." + getExtension(fileAvatar.getOriginalFilename()));
         Files.createDirectories(filePath.getParent());
         Files.deleteIfExists(filePath);
@@ -52,22 +56,25 @@ public class AvatarService {
 
 
             Avatar avatar = findAvatarByStudentId(id);
-            avatar.setStudent(student);
+            avatar.setStudent(student.toStudent());
             avatar.setFilePath(filePath.toString());
             avatar.setFileSize(fileAvatar.getSize());
             avatar.setMediaType(fileAvatar.getContentType());
             avatar.setData(baos.toByteArray());
             avatarRepository.save(avatar);
+            logger.debug("Create avatar {}", avatar);
+        } catch (Exception e) {
+            logger.error(e.getMessage());
         }
     }
 
     public Avatar findAvatarByStudentId(Long studentId) {
+        logger.debug("Was invoked method for find avatar by student id {}", studentId);
         return avatarRepository.findAvatarByStudent_Id(studentId).orElse(new Avatar());
     }
 
     private String getExtension(String originalFilename) {
-
-        return originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
+       return originalFilename.substring(originalFilename.lastIndexOf(".") + 1);
 
     }
 
